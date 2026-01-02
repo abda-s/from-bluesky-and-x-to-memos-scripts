@@ -1,4 +1,4 @@
-# from-bluesky-and-x-to-memos-scripts
+# bsky-twitter-to-memos
 
 A collection of Python scripts to migrate your content from **[Bluesky](https://bsky.app)** and **[Twitter/X](https://x.com)** into your self-hosted **[Memos](https://usememos.com)** instance.
 
