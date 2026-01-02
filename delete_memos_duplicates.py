@@ -120,17 +120,35 @@ def find_duplicates(memos):
     content_date_groups = defaultdict(list)
 
     for memo in memos:
-        content = memo.get("content", "")
-        if content:
-            # Get date from createTime
-            create_time = memo.get("createTime", "")
-            date = extract_date(create_time)
-            
-            # Create composite key: content_hash + date
-            content_hash = hashlib.md5(content.encode()).hexdigest()
-            composite_key = f"{content_hash}_{date}"
-            
-            content_date_groups[composite_key].append(memo)
+        content = memo.get("content", "") or ""
+        resources = memo.get("resources", []) or []
+        
+        # Skip only if BOTH content and resources are empty
+        if not content and not resources:
+            continue
+
+        # Create resource signature to include in hash
+        # We sort resources to ensure order doesn't affect hash
+        resource_sigs = []
+        for res in resources:
+            res_name = res.get("filename") or res.get("name") or "unknown"
+            res_type = res.get("type", "unknown")
+            resource_sigs.append(f"{res_name}:{res_type}")
+        
+        resource_string = "|".join(sorted(resource_sigs))
+        
+        # Combine content + resources for uniqueness
+        unique_string = f"{content}||{resource_string}"
+
+        # Get date from createTime
+        create_time = memo.get("createTime", "")
+        date = extract_date(create_time)
+        
+        # Create composite key: content_hash + date
+        content_hash = hashlib.md5(unique_string.encode()).hexdigest()
+        composite_key = f"{content_hash}_{date}"
+        
+        content_date_groups[composite_key].append(memo)
 
     # Filter to only groups with duplicates
     duplicates = {
@@ -156,8 +174,15 @@ def find_duplicates(memos):
         list(duplicates.items())[:display_limit], 1
     ):
         # Extract date from composite key
+        # Extract date from composite key
         date = composite_key.split('_')[-1]
-        preview = memo_list[0]["content"][:60].replace("\n", " ")
+        
+        memo_content = memo_list[0].get("content", "")
+        memo_resources = memo_list[0].get("resources", [])
+        
+        preview = memo_content[:60].replace("\n", " ") if memo_content else "[No Text]"
+        if memo_resources:
+            preview += f" (+{len(memo_resources)} attachments)"
         
         print(f"Set {idx}: {len(memo_list)} copies on {date}")
         print(f"  Content: {preview}...")
@@ -221,7 +246,8 @@ def delete_duplicates(duplicates):
         # Keep first (oldest), delete the rest
         for memo in memo_list[1:]:
             memo_name = memo.get("name")
-            preview = memo["content"][:50].replace("\n", " ")
+            content = memo.get("content", "")
+            preview = content[:50].replace("\n", " ") if content else "[No Text]"
 
             if DRY_RUN:
                 print(f"[DRY RUN] Would delete: {memo_name}")
