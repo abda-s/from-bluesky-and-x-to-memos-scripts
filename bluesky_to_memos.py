@@ -10,10 +10,10 @@ import mimetypes
 load_dotenv()
 
 # --- CONFIGURATION ---
-MEMOS_URL = os.getenv("MEMOS_URL")
-MEMOS_TOKEN = os.getenv("MEMOS_TOKEN")
-BSKY_HANDLE = os.getenv("BSKY_HANDLE")
-BSKY_PASSWORD = os.getenv("BSKY_PASSWORD")
+MEMOS_URL = os.getenv("MEMOS_HOST")
+MEMOS_TOKEN = os.getenv("MEMOS_ACCESS_TOKEN")
+BSKY_HANDLE = os.getenv("BLUESKY_HANDLE")
+BSKY_PASSWORD = os.getenv("BLUESKY_PASSWORD")
 PAGINATION_DELAY = 1.0
 MAX_RETRIES = 3
 # ---------------------

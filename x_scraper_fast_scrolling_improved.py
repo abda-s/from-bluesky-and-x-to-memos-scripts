@@ -11,12 +11,12 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # --- CONFIGURATION ---
-MEMOS_URL = os.getenv("MEMOS_URL")
-MEMOS_TOKEN = os.getenv("MEMOS_TOKEN")
-TARGET_USERNAME = os.getenv("TWITTER_USERNAME")
-MAX_SCROLLS = int(os.getenv("MAX_SCROLLS"))
-TWITTER_AUTH_TOKEN = os.getenv("TWITTER_AUTH_TOKEN")
-TWITTER_CT0 = os.getenv("TWITTER_CT0")
+MEMOS_URL = os.getenv("MEMOS_HOST")
+MEMOS_TOKEN = os.getenv("MEMOS_ACCESS_TOKEN")
+TARGET_USERNAME = os.getenv("X_USERNAME")
+MAX_SCROLLS = int(os.getenv("X_MAX_SCROLLS"))
+TWITTER_AUTH_TOKEN = os.getenv("X_AUTH_TOKEN")
+TWITTER_CT0 = os.getenv("X_CT0")
 # ---------------------
 
 

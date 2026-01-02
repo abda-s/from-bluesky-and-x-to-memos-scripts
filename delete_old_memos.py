@@ -12,10 +12,10 @@ from urllib3.util.retry import Retry
 load_dotenv()
 
 # --- CONFIGURATION ---
-MEMOS_URL = os.getenv("MEMOS_URL")
-MEMOS_TOKEN = os.getenv("MEMOS_TOKEN")
+MEMOS_URL = os.getenv("MEMOS_HOST")
+MEMOS_TOKEN = os.getenv("MEMOS_ACCESS_TOKEN")
 # Set the cutoff date (delete everything BEFORE this date)
-CUTOFF_DATE = os.getenv("CUTOFF_DATE")
+CUTOFF_DATE = os.getenv("CLEANUP_CUTOFF_DATE")
 DRY_RUN = False  # Set to False to actually delete
 PAGE_SIZE = 100
 RATE_LIMIT_DELAY = 0.1

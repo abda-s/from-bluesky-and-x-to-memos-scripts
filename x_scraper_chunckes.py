@@ -12,25 +12,25 @@ from datetime import datetime, timedelta
 load_dotenv()
 
 # --- CONFIGURATION ---
-MEMOS_URL = os.getenv("MEMOS_URL")
-MEMOS_TOKEN = os.getenv("MEMOS_TOKEN")
-TARGET_USERNAME = os.getenv("TWITTER_USERNAME")
-MAX_SCROLLS = int(os.getenv("MAX_SCROLLS", "10"))
-TWITTER_AUTH_TOKEN = os.getenv("TWITTER_AUTH_TOKEN")
-TWITTER_CT0 = os.getenv("TWITTER_CT0")
+MEMOS_URL = os.getenv("MEMOS_HOST")
+MEMOS_TOKEN = os.getenv("MEMOS_ACCESS_TOKEN")
+TARGET_USERNAME = os.getenv("X_USERNAME")
+MAX_SCROLLS = int(os.getenv("X_MAX_SCROLLS", "10"))
+TWITTER_AUTH_TOKEN = os.getenv("X_AUTH_TOKEN")
+TWITTER_CT0 = os.getenv("X_CT0")
 
 # Date range configuration
-START_YEAR = int(os.getenv("START_YEAR"))
-START_MONTH = int(os.getenv("START_MONTH"))
-START_DAY = int(os.getenv("START_DAY"))
-END_YEAR = int(os.getenv("END_YEAR"))
-END_MONTH = int(os.getenv("END_MONTH"))
-END_DAY = int(os.getenv("END_DAY"))
+START_YEAR = int(os.getenv("X_START_YEAR"))
+START_MONTH = int(os.getenv("X_START_MONTH"))
+START_DAY = int(os.getenv("X_START_DAY"))
+END_YEAR = int(os.getenv("X_END_YEAR"))
+END_MONTH = int(os.getenv("X_END_MONTH"))
+END_DAY = int(os.getenv("X_END_DAY"))
 
 CHUNK_DAYS = 5  # Scrape in 5-day chunks
 
 # Twitter search filter - Set to "false" to disable
-FILTER_REPLIES = os.getenv("FILTER_REPLIES", "true").lower() == "true"
+FILTER_REPLIES = os.getenv("X_FILTER_REPLIES", "true").lower() == "true"
 # ---------------------
 
 def fetch_existing_memos():

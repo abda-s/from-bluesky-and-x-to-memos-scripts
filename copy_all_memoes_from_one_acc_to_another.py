@@ -13,18 +13,18 @@ from urllib3.util.retry import Retry
 load_dotenv()
 
 # --- CONFIGURATION ---
-SOURCE_MEMOS_URL = os.getenv("SOURCE_MEMOS_URL")
-SOURCE_MEMOS_TOKEN = os.getenv("SOURCE_MEMOS_TOKEN")
-DEST_MEMOS_URL = os.getenv("DEST_MEMOS_URL")
-DEST_MEMOS_TOKEN = os.getenv("DEST_MEMOS_TOKEN")
-SOURCE_HANDLE = os.getenv("SOURCE_HANDLE", "")
+SOURCE_MEMOS_URL = os.getenv("MIGRATION_SOURCE_HOST")
+SOURCE_MEMOS_TOKEN = os.getenv("MIGRATION_SOURCE_TOKEN")
+DEST_MEMOS_URL = os.getenv("MIGRATION_DEST_HOST")
+DEST_MEMOS_TOKEN = os.getenv("MIGRATION_DEST_TOKEN")
+SOURCE_HANDLE = os.getenv("MIGRATION_ADD_PREFIX_HANDLE", "")
 PAGE_SIZE = int(os.getenv("PAGE_SIZE", "100"))
 RATE_LIMIT_DELAY = float(os.getenv("RATE_LIMIT_DELAY", "0.1"))
 MAX_RETRIES = int(os.getenv("MAX_RETRIES", "3"))
 # Optional: Filter memos by handle (e.g. "myhandle"). 
-# If set, only memos starting with "@{FILTER_HANDLE}:" will be copied, 
+# If set, only memos starting with "@{MIGRATION_FILTER_HANDLE}:" will be copied, 
 # and the prefix will be removed.
-FILTER_HANDLE = os.getenv("FILTER_HANDLE")
+FILTER_HANDLE = os.getenv("MIGRATION_FILTER_HANDLE")
 # Fixed: DRY_RUN logic was inverted
 DRY_RUN = False
 # ---------------------

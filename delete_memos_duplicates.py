@@ -13,8 +13,9 @@ from datetime import datetime
 load_dotenv()
 
 # --- CONFIGURATION ---
-MEMOS_URL = os.getenv("MEMOS_URL")
-MEMOS_TOKEN = os.getenv("MEMOS_TOKEN")
+# --- CONFIGURATION ---
+MEMOS_URL = os.getenv("MEMOS_HOST")
+MEMOS_TOKEN = os.getenv("MEMOS_ACCESS_TOKEN")
 DRY_RUN = False  # Set to False to actually delete duplicates
 MAX_RETRIES = 3
 PAGE_SIZE = 100
