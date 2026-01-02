@@ -1,0 +1,5 @@
+requests
+python-dotenv
+playwright
+atproto
+yt-dlp
