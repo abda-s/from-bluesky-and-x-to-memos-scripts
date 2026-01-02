@@ -1,6 +1,6 @@
 # from-bluesky-and-x-to-memos-scripts
 
-A collection of Python scripts to migrate your content from **Bluesky** and **Twitter/X** into your self-hosted **Memos** instance.
+A collection of Python scripts to migrate your content from **[Bluesky](https://bsky.app)** and **[Twitter/X](https://x.com)** into your self-hosted **[Memos](https://usememos.com)** instance.
 
 ## 🚀 Setup & Installation
 
@@ -67,9 +67,9 @@ A collection of Python scripts to migrate your content from **Bluesky** and **Tw
 ---
 
 ## 🐦 Twitter / X Scrapers
-We provide three scripts, but **`hybrid_x_scraper.py` is the best one** and the only one you likely need.
+We provide three scripts, but **`scrape_x_hybrid.py` is the best one** and the only one you likely need.
 
-### 🏆 `hybrid_x_scraper.py` (Recommended)
+### 🏆 `scrape_x_hybrid.py` (Recommended)
 **Use this one.** It automates the entire process by combining the best of both worlds:
 1.  **Fast Scroll**: It starts by rapidly scrolling through your profile to get the most recent ~3,000 posts (much faster).
 2.  **Chunked Search**: Once scrolling hits the limit (X blocks infinite scroll after ~1 year), it automatically switches to "Chunk Mode" to find older posts that scrolling missed.
@@ -78,18 +78,18 @@ We provide three scripts, but **`hybrid_x_scraper.py` is the best one** and the 
 ---
 ### Other Scrapers (For specific needs)
 
-#### `x_scraper_chunckes.py`
+#### `scrape_x_search.py`
 *   **What it is**: The "Deep Search" component of the hybrid script.
 *   **When to use**: If you *only* want to scrape a specific old year (e.g., just 2018) without scrolling through everything else.
 
-#### `x_scraper_fast_scrolling_improved.py`
+#### `scrape_x_recent.py`
 *   **What it is**: The "Fast Scroll" component of the hybrid script.
 *   **When to use**: If you only want to quickly backup your tweets from the last few months.
 
 ---
 
 ## ☁️ Bluesky Migration
-### `bluesky_to_memos.py`
+### `import_bluesky.py`
 **Use this for:** Migrating all your Bluesky posts.
 *   **How it works**: Uses the official Bluesky API (AT Protocol). It's much faster and more reliable than the X scrapers because we have official API access.
 
@@ -97,17 +97,17 @@ We provide three scripts, but **`hybrid_x_scraper.py` is the best one** and the 
 
 ## 🛠️ Management & Cleanup Tools
 
-### `copy_all_memoes_from_one_acc_to_another.py`
+### `migrate_memos.py`
 **Use this for:** Moving memos between two accounts or two different Memos instances.
 *   **Features**:
     *   Copies content, resources (images/videos), and original creation dates.
     *   **Filter & Strip**: Can look for memos starting with `@{handle}:`, remove that handle, and copy just the clean content. (Set `MIGRATION_FILTER_HANDLE` in `.env`).
 
-### `delete_memos_duplicates.py`
+### `cleanup_duplicates.py`
 **Use this for:** Cleaning up accidental duplicates.
 *   **Smart Detection**: Identifies duplicates by hashing checking both **Content** + **Attachments**. (e.g., two posts with no text but the same image are flagged as duplicates).
 *   **Safety**: Runs in `DRY_RUN` mode by default (configure in script).
 
-### `delete_old_memos.py`
+### `cleanup_old_memos.py`
 **Use this for:** Bulk deleting old content.
 *   **Config**: Deletes everything created **BEFORE** the `CLEANUP_CUTOFF_DATE` set in your `.env`.
