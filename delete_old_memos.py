@@ -153,82 +153,82 @@ def main():
             print("No memos found. Exiting.")
             return
     
-    # Filter memos before cutoff date
-    memos_to_delete = []
-    
-    for memo in memos:
-        create_time = memo.get("createTime") or memo.get("createdTs")
+        # Filter memos before cutoff date
+        memos_to_delete = []
         
-        if not create_time:
-            continue
-        
-        # Handle both ISO string and Unix timestamp
-        try:
-            if isinstance(create_time, str):
-                memo_dt = datetime.fromisoformat(
-                    create_time.replace("Z", "+00:00")
-                )
-            else:
-                memo_dt = datetime.fromtimestamp(create_time)
+        for memo in memos:
+            create_time = memo.get("createTime") or memo.get("createdTs")
             
-            if memo_dt < cutoff_dt:
-                memos_to_delete.append({
-                    "name": memo.get("name"),
-                    "id": memo.get("id") or memo.get("uid"),
-                    "content": memo.get("content", "")[:50],
-                    "date": memo_dt.strftime("%Y-%m-%d %H:%M:%S")
-                })
-        except Exception as e:
-            print(f"⚠️  Skipping memo due to date parsing error: {e}")
-            continue
-    
-    # Show summary
-    print(f"📊 Found {len(memos_to_delete)} memos to delete:\n")
-    
-    for i, memo in enumerate(memos_to_delete[:10], 1):
-        print(f"  {i}. [{memo['date']}] {memo['content']}...")
-    
-    if len(memos_to_delete) > 10:
-        print(f"  ... and {len(memos_to_delete) - 10} more")
-    
-    print("\n" + "=" * 60)
-    
-    if not memos_to_delete:
-        print("✅ No memos to delete!")
-        return
-    
-    # Delete memos
-    deleted_count = 0
-    failed_count = 0
-    
-    for i, memo in enumerate(memos_to_delete, 1):
-        print(f"[{i}/{len(memos_to_delete)}] ", end="")
+            if not create_time:
+                continue
+            
+            # Handle both ISO string and Unix timestamp
+            try:
+                if isinstance(create_time, str):
+                    memo_dt = datetime.fromisoformat(
+                        create_time.replace("Z", "+00:00")
+                    )
+                else:
+                    memo_dt = datetime.fromtimestamp(create_time)
+                
+                if memo_dt < cutoff_dt:
+                    memos_to_delete.append({
+                        "name": memo.get("name"),
+                        "id": memo.get("id") or memo.get("uid"),
+                        "content": memo.get("content", "")[:50],
+                        "date": memo_dt.strftime("%Y-%m-%d %H:%M:%S")
+                    })
+            except Exception as e:
+                print(f"⚠️  Skipping memo due to date parsing error: {e}")
+                continue
         
-        if DRY_RUN:
-            print(f"Would delete: [{memo['date']}] {memo['content']}...")
-            deleted_count += 1
-        else:
-            if delete_memo(memo['name'], memo['id'], session):
-                print(f"✅ Deleted: [{memo['date']}]")
+        # Show summary
+        print(f"📊 Found {len(memos_to_delete)} memos to delete:\n")
+        
+        for i, memo in enumerate(memos_to_delete[:10], 1):
+            print(f"  {i}. [{memo['date']}] {memo['content']}...")
+        
+        if len(memos_to_delete) > 10:
+            print(f"  ... and {len(memos_to_delete) - 10} more")
+        
+        print("\n" + "=" * 60)
+        
+        if not memos_to_delete:
+            print("✅ No memos to delete!")
+            return
+        
+        # Delete memos
+        deleted_count = 0
+        failed_count = 0
+        
+        for i, memo in enumerate(memos_to_delete, 1):
+            print(f"[{i}/{len(memos_to_delete)}] ", end="")
+            
+            if DRY_RUN:
+                print(f"Would delete: [{memo['date']}] {memo['content']}...")
                 deleted_count += 1
             else:
-                print(f"❌ Failed: [{memo['date']}]")
-                failed_count += 1
-    
-    # Final summary
-    print("\n" + "=" * 60)
-    print("CLEANUP COMPLETE")
-    print("=" * 60)
-    
-    if DRY_RUN:
-        print(f"🔍 Dry run: {deleted_count} memos would be deleted")
-        print(
-            "\n💡 Set DRY_RUN = False to actually delete these memos"
-        )
-    else:
-        print(f"✅ Successfully deleted: {deleted_count}")
-        if failed_count > 0:
-            print(f"❌ Failed to delete: {failed_count}")
+                if delete_memo(memo['name'], memo['id'], session):
+                    print(f"✅ Deleted: [{memo['date']}]")
+                    deleted_count += 1
+                else:
+                    print(f"❌ Failed: [{memo['date']}]")
+                    failed_count += 1
+        
+        # Final summary
+        print("\n" + "=" * 60)
+        print("CLEANUP COMPLETE")
+        print("=" * 60)
+        
+        if DRY_RUN:
+            print(f"🔍 Dry run: {deleted_count} memos would be deleted")
+            print(
+                "\n💡 Set DRY_RUN = False to actually delete these memos"
+            )
+        else:
+            print(f"✅ Successfully deleted: {deleted_count}")
+            if failed_count > 0:
+                print(f"❌ Failed to delete: {failed_count}")
             
     finally:
         session.close()
