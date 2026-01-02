@@ -100,8 +100,8 @@ def fetch_all_memos(
         return []
 
 
-def delete_memo(memo_name, memo_id):
-    """Delete a single memo."""
+def delete_memo(memo_name, memo_id, session):
+    """Delete a single memo using the persistent session."""
     headers = {"Authorization": f"Bearer {MEMOS_TOKEN}"}
     
     # Try with name first (newer API)
@@ -111,7 +111,7 @@ def delete_memo(memo_name, memo_id):
         url = f"{MEMOS_URL}/api/v1/memos/{memo_id}"
     
     try:
-        response = requests.delete(url, headers=headers)
+        response = session.delete(url, headers=headers)
         return response.status_code == 200
     except Exception as e:
         print(f"  ⚠️  Error: {e}")
@@ -208,14 +208,12 @@ def main():
             print(f"Would delete: [{memo['date']}] {memo['content']}...")
             deleted_count += 1
         else:
-            if delete_memo(memo['name'], memo['id']):
+            if delete_memo(memo['name'], memo['id'], session):
                 print(f"✅ Deleted: [{memo['date']}]")
                 deleted_count += 1
             else:
                 print(f"❌ Failed: [{memo['date']}]")
                 failed_count += 1
-            
-            time.sleep(0.1)  # Rate limiting
     
     # Final summary
     print("\n" + "=" * 60)
