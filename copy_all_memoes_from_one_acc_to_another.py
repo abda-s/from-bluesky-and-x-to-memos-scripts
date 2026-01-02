@@ -21,6 +21,10 @@ SOURCE_HANDLE = os.getenv("SOURCE_HANDLE", "")
 PAGE_SIZE = int(os.getenv("PAGE_SIZE", "100"))
 RATE_LIMIT_DELAY = float(os.getenv("RATE_LIMIT_DELAY", "0.1"))
 MAX_RETRIES = int(os.getenv("MAX_RETRIES", "3"))
+# Optional: Filter memos by handle (e.g. "myhandle"). 
+# If set, only memos starting with "@{FILTER_HANDLE}:" will be copied, 
+# and the prefix will be removed.
+FILTER_HANDLE = os.getenv("FILTER_HANDLE")
 # Fixed: DRY_RUN logic was inverted
 DRY_RUN = False
 # ---------------------
@@ -360,6 +364,29 @@ def migrate_memo(
         return False
 
     logger.info(f"\n📝 Migrating memo: {memo_name}")
+
+    # --- FILTERING LOGIC ---
+    if FILTER_HANDLE:
+        content = memo.get("content", "")
+        prefix = f"@{FILTER_HANDLE}:"
+        
+        if content.strip().startswith(prefix):
+            # Strip the prefix and leading whitespace/newlines
+            new_content = content.replace(prefix, "", 1).strip()
+            
+            # Update memo content for migration
+            # We create a copy to avoid mutating the original dict if it matters
+            memo = memo.copy()
+            memo["content"] = new_content
+            
+            logger.info(f"  ✨ Filter match! Stripped handle '{prefix}'")
+            # Clear source_handle so we don't double-prepend or prepend unwanted stuff
+            source_handle = ""
+            
+        else:
+            logger.info(f"  ⏭️  Skipping: Content does not start with '{prefix}'")
+            return False
+    # -----------------------
 
     # Get attachments from source
     attachments = fetch_memo_attachments(
